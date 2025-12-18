@@ -44,6 +44,6 @@ jobs:
             # Hoặc dùng lại logic cũ nếu muốn chắc chắn
             IMAGE_LOWER="ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
             docker pull $IMAGE_LOWER:latest
-            docker stop my_app || true
-            docker rm my_app || true
-            docker run -d --name my_app -p 5000:5000 $IMAGE_LOWER:latest
+            docker stop uploads || true
+            docker rm uploads || true
+            docker run -d --name uploads -p 5000:5000 $IMAGE_LOWER:latest
