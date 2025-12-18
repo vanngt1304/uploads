@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env: 
-  IMAGE_NAME: ghcr.io{{ github.repository }}
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
 permissions:
   contents: read
   packages: write
