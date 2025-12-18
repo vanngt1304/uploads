@@ -30,12 +30,18 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
+          username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: DOCKER_USERNAME,DOCKER_PASSWORD
+          envs: GITHUB_ACTOR, GITHUB_TOKEN, IMAGE_NAME
           script: |
-            echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "$DOCKER_USERNAME" --password-stdin
-            docker pull ${{ env.IMAGE_NAME }}:latest
+            echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+            
+            echo "Bắt đầu deploy..."
+            
+            # Lấy tên image (đã được truyền qua envs, không cần tính toán lại phức tạp)
+            # Hoặc dùng lại logic cũ nếu muốn chắc chắn
+            IMAGE_LOWER="ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
+            docker pull $IMAGE_LOWER:latest
             docker stop my_app || true
             docker rm my_app || true
-            docker run -d --name my_app -p 5000:5000 ${{ env.IMAGE_NAME }}:latest
+            docker run -d --name my_app -p 5000:5000 $IMAGE_LOWER:latest
