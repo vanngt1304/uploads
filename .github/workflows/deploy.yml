@@ -5,6 +5,8 @@ on:
       - main
 env: 
   IMAGE_NAME: ghcr.io/${{ github.repository }}
+  GITHUB_ACTOR: ${{ github.actor }}
+  GITHUB_TOKEN: ${{ secrets.MY_PATMYMY }}
 permissions:
   contents: read
   packages: write
