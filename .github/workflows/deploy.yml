@@ -36,12 +36,12 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           envs: GITHUB_ACTOR, GITHUB_TOKEN, IMAGE_NAME
           script: |
-            echo "$GITHUB_TOKEN" > /tmp/docker_pass
-            docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin < /tmp/docker_pass
-            rm /tmp/docker_pass
+            echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
             
             echo "Bắt đầu deploy..."
             
+            # Lấy tên image (đã được truyền qua envs, không cần tính toán lại phức tạp)
+            # Hoặc dùng lại logic cũ nếu muốn chắc chắn
             IMAGE_LOWER="ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
             docker pull $IMAGE_LOWER:latest
             docker stop uploads || true
